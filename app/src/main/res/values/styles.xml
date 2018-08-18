@@ -1,0 +1,17 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="android:actionBarStyle">@style/actionbarStyles</item>
+        <item name="android:background">@color/feeds_background</item>
+    </style>
+    <style name="ActionBtn">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:background">@drawable/clicked_action_btn</item>
+    </style>
+    <style name="actionbarStyles">
+        <item name="android:tint">#424242</item>
+    </style>
+
+</resources>

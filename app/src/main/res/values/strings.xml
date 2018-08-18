@@ -1,0 +1,46 @@
+<resources>
+    <string name="app_name">Cubix</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="login">login</string>
+    <string name="signup">Sign up</string>
+    <string name="pull_up">Pull Up For Feeds</string>
+    <string name="whats_your_focus">Whats Your Focus Today</string>
+    <string name="backgroud_image_desc">Background Image</string>
+    <string name="user_name">Email</string>
+    <string name="password">Password</string>
+    <string name="sign_up_with_facebook">Continue with facebook</string>
+    <string name="Or">Or</string>
+    <string name="pin">Pin</string>
+    <string name="like">Like</string>
+    <string name="settings">settings</string>
+    <string name="search">Search</string>
+    <string name="menu">Menu</string>
+    <string name="app_logo">app_logo</string>
+    <string name="home">Home</string>
+    <string name="account">Profile</string>
+    <string name="library">Library</string>
+    <string name="todo">TODO</string>
+    <string name="apiUrl">http://api.beeReader.com</string>
+    <string name="readerActivity_Intent_TitleKey">title</string>
+    <string name="readerActivity_Intent_BodyKey">body</string>
+    <string name="readerActivity_Intent_ImageUriKey">imageUri</string>
+    <string name="next">Next</string>
+    <string name="userKey">userState</string>
+    <string name="discover">Discover</string>
+    <string name="shared_pref_key">com.redwasp.cubix.SHARED_PREF</string>
+    <string name="search_hint">Type The Material You are Looking for</string>
+    <string name="take_note">Snap Note</string>
+    <string name="notify_handwriting">Hi, make sure the note have a good handwriting for best performance</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">Ok</string>
+    <string name="error_connecting">Error Connecting to Cubix Severs</string>
+    <string name="swipe_to_refresh">Swipe Down To Refresh</string>
+    <string name="try_again">Try Again</string>
+    <string name="welcomeMessage">Hello dear, thanks for choosing Cubix, As you can see this you are using a Beta version, All features are not implemented yet, still we are working very hard to give to serve you the best finished product. Email us if you have any ideas or issues</string>
+    <string name="type_note_name">Type Note Name</string>
+    <string name="process">Process</string>
+    <string name="note_1">note_1</string>
+    <string name="note">Note</string>
+</resources>

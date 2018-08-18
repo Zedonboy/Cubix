@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorAccent2">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/reading_fragment_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:elevation="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/reading_fragment_imageView"
+        android:layout_width="0dp"
+        android:layout_height="200dp"
+        android:src="@drawable/placeholder"
+        android:scaleType="fitXY"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/reading_fragment_toolbar" />
+
+    <TextView
+        android:id="@+id/reading_fragment_title"
+        android:layout_width="169dp"
+        android:layout_height="42dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text=""
+        android:textColor="@color/text_body_color"
+        android:textSize="21sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/reading_fragment_imageView" />
+
+    <TextView
+        android:id="@+id/reading_fragment_body"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text=""
+        android:textColor="@color/text_body_color"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/reading_fragment_title" />
+</android.support.constraint.ConstraintLayout>
