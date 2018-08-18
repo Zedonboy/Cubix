@@ -61,7 +61,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/articlePhoto" />
 
             <android.support.design.widget.BottomNavigationView
-                android:id="@+id/activity_feed_btmNav"
+                android:id="@+id/feed_item_feed_btmNav"
                 android:layout_width="0dp"
                 android:layout_height="37dp"
                 android:layout_marginEnd="8dp"

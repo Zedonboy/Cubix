@@ -66,7 +66,7 @@ class PBAdapter<T>(private val present : IPresenter) :
                 VIEW_ITEM -> {
                     val view = holder.view
                     val container = view.findViewById<View>(R.id.feed_list_body)
-                    val bottomNav = view.findViewById<BottomNavigationView>(R.id.activity_feed_btmNav)
+                    val bottomNav = view.findViewById<BottomNavigationView>(R.id.feed_item_feed_btmNav)
                     bottomNav.setOnNavigationItemSelectedListener {
                         when(it.itemId){
                             R.id.save -> {

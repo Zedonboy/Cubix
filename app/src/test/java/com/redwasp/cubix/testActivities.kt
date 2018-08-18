@@ -61,8 +61,21 @@ class testActivities {
     @Test
     fun testingDiscoverActivity(){
         val discoverAct = Robolectric.setupActivity(DiscoverActivity::class.java)
+        val App = discoverAct.application
         val bottomNav = discoverAct.findViewById<BottomNavigationView>(R.id.activity_feed_btmNav)
         val profileButton = bottomNav.findViewById<BottomNavigationItemView>(R.id.profile)
+        val materialbtn = bottomNav.findViewById<BottomNavigationItemView>(R.id.library)
+        val snapshot = bottomNav.findViewById<BottomNavigationItemView>(R.id.take_note)
+        // simulating clicking action
+        profileButton.performClick()
+        var currentFrag = discoverAct.supportFragmentManager.findFragmentByTag("ProfileFragment")
+        assertTrue("Profile Does not showup",(currentFrag != null && currentFrag.isVisible && currentFrag is ProfileFragment))
+
+        materialbtn.performClick()
+        currentFrag = discoverAct.supportFragmentManager.findFragmentByTag("MaterialRackFragment")
+        assertTrue("Material Fragment does not show up", (currentFrag != null && currentFrag.isVisible && currentFrag is MaterialRackFragment))
+
+       discoverAct.callCamFunc()
     }
 
 }

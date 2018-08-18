@@ -11,6 +11,7 @@ import android.widget.Button
 import android.widget.ProgressBar
 import androidx.core.view.isVisible
 import com.redwasp.cubix.App
+import com.redwasp.cubix.DiscoverActivity
 import kotlinx.android.synthetic.main.fragment_feed_list.*
 
 import com.redwasp.cubix.R
@@ -27,6 +28,7 @@ class FeedListFragment : Fragment(), IFeedListFragment, SwipeRefreshLayout.OnRef
     private val presenter = FeedListPresenter()
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
+        (activity as DiscoverActivity).selectedTab = R.id.home
         presenter.init(this, FeedListFragmentModel(Network(context)))
         presenter.setGlobalPresenter((context?.applicationContext as App).presenter)
         // Inflate the layout for this fragment

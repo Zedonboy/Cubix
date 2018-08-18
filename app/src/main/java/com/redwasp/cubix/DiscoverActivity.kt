@@ -10,6 +10,7 @@ import android.provider.MediaStore
 import android.support.v4.app.Fragment
 import android.support.v4.content.FileProvider
 import android.view.Menu
+import android.view.View
 import com.redwasp.cubix.arch.IView
 import com.redwasp.cubix.archComponents_Presenters.DiscoverActivityPresenter
 import com.redwasp.cubix.fragments.DialogBox
@@ -28,6 +29,10 @@ class DiscoverActivity : AppCompatActivity(), IView, DialogActivityInterface {
     private val fragmentManager = supportFragmentManager
     private val imageCaptureToken = 4
     private var imagePath = ""
+    var selectedTab : Int = 0
+    set(value) {
+        activity_feed_btmNav?.selectedItemId = value
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         presenter.init(this)
@@ -58,9 +63,9 @@ class DiscoverActivity : AppCompatActivity(), IView, DialogActivityInterface {
                 R.id.home -> {
                     presenter.navigate(FeedListFragment())
                 }
-//                R.id.library -> {
-//                    presenter.navigate(MaterialRackFragment())
-//                }
+                R.id.library -> {
+                    presenter.navigate(MaterialRackFragment())
+                }
                 R.id.take_note -> {
                     presenter.showDialog()
                 }
@@ -151,5 +156,13 @@ class DiscoverActivity : AppCompatActivity(), IView, DialogActivityInterface {
         if(supportFragmentManager.backStackEntryCount <= 1){
             finish()
         }
+    }
+
+    fun shutDownToolBar(){
+        toolbar?.visibility = View.GONE
+    }
+
+    fun callCamFunc(){
+        callCameraApp()
     }
 }
