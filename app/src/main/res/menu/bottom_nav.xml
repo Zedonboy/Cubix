@@ -12,11 +12,6 @@
         android:title="Library"
         app:showAsAction="always"/>
     <item
-        android:id="@+id/profile"
-        android:icon="@drawable/ic_account_circle_black_24dp"
-        android:title="@string/account"
-        app:showAsAction="always" />
-    <item
         android:id="@+id/take_note"
         android:icon="@drawable/ic_remove_red_eye_black_24dp"
         android:title="@string/take_note"

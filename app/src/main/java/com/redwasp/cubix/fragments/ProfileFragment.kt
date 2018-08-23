@@ -22,7 +22,7 @@ class ProfileFragment : Fragment() {
         activity.shutDownToolBar()
         activity.selectedTab = R.id.profile
 
-        return inflater.inflate(R.layout.fragment_profile, container, false)
+        return inflater.inflate(R.layout.fragment_feed_list, container, false)
     }
 
     override fun toString(): String = "ProfileFragment"

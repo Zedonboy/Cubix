@@ -11,10 +11,9 @@ import android.support.v4.app.Fragment
 import android.support.v4.content.FileProvider
 import android.view.Menu
 import android.view.View
-import com.redwasp.cubix.arch.IView
 import com.redwasp.cubix.archComponents_Presenters.DiscoverActivityPresenter
 import com.redwasp.cubix.fragments.DialogBox
-import com.redwasp.cubix.fragments.FeedListFragment
+import com.redwasp.cubix.fragments.HomeFragment
 import com.redwasp.cubix.fragments.MaterialRackFragment
 import com.redwasp.cubix.fragments.ProfileFragment
 import com.redwasp.cubix.utils.DialogActivityInterface
@@ -24,9 +23,8 @@ import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 
-class DiscoverActivity : AppCompatActivity(), IView, DialogActivityInterface {
+class DiscoverActivity : AppCompatActivity(), DialogActivityInterface {
     private val presenter = DiscoverActivityPresenter()
-    private val fragmentManager = supportFragmentManager
     private val imageCaptureToken = 4
     private var imagePath = ""
     var selectedTab : Int = 0
@@ -35,11 +33,11 @@ class DiscoverActivity : AppCompatActivity(), IView, DialogActivityInterface {
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        presenter.init(this)
+        //presenter.init(this)
         setContentView(R.layout.activity_discover)
         setSupportActionBar(toolbar)
         initUI()
-        presenter.navigate(FeedListFragment())
+        navigateToAnotherView(HomeFragment())
     }
 
     private fun initUI() {
@@ -58,16 +56,19 @@ class DiscoverActivity : AppCompatActivity(), IView, DialogActivityInterface {
         activity_feed_btmNav?.setOnNavigationItemSelectedListener {
             when(it.itemId){
                 R.id.profile -> {
-                    presenter.navigate(ProfileFragment())
+                    navigateToAnotherView(ProfileFragment())
+                    //presenter.navigate(ProfileFragment())
                 }
                 R.id.home -> {
-                    presenter.navigate(FeedListFragment())
+                    navigateToAnotherView(HomeFragment())
+                    //presenter.navigate(FeedListFragment())
                 }
                 R.id.library -> {
-                    presenter.navigate(MaterialRackFragment())
+                    navigateToAnotherView(MaterialRackFragment())
+                    //presenter.navigate(MaterialRackFragment())
                 }
                 R.id.take_note -> {
-                    presenter.showDialog()
+                    //.showDialog()
                 }
             }
 
@@ -76,30 +77,29 @@ class DiscoverActivity : AppCompatActivity(), IView, DialogActivityInterface {
 
     }
 
-    override fun update(){
-
-    }
-
-    override fun <T> navigateToAnotherView(data: T) {
-        if(data is Fragment)
-                fragmentManager.beginTransaction().replace(R.id.fragment_container,data,data.toString())
+//    override fun update(){
+//
+//    }
+//
+    private fun navigateToAnotherView(data: Fragment) {
+                supportFragmentManager.beginTransaction().replace(R.id.fragment_container,data,data.toString())
                         .addToBackStack(null)
                         .commit()
     }
-
-
+//
+//
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater = menuInflater
         inflater.inflate(R.menu.menu, menu)
         return true
     }
-
+//
     fun cameraDialog(){
         val dialogBox = DialogBox()
         dialogBox.setCallingActivity(this)
-        dialogBox.show(getFragmentManager(), "dialog_box")
+        dialogBox.show(fragmentManager, "dialog_box")
     }
-
+//
     private fun callCameraApp(){
         // this method is called by the presenter
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
@@ -132,7 +132,7 @@ class DiscoverActivity : AppCompatActivity(), IView, DialogActivityInterface {
             presenter.navigate(fragment)
         }
     }
-
+//
     @SuppressLint("SimpleDateFormat")
     @Throws(IOException::class)
     private fun createImageFile(): File {
@@ -151,7 +151,8 @@ class DiscoverActivity : AppCompatActivity(), IView, DialogActivityInterface {
         return image
     }
 
-    override fun onBackBtnPressed() {
+    override fun onBackPressed() {
+        super.onBackPressed()
         supportFragmentManager.popBackStack()
         if(supportFragmentManager.backStackEntryCount <= 1){
             finish()

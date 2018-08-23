@@ -5,18 +5,25 @@ import com.redwasp.cubix.utils.ApiContract
 import com.redwasp.cubix.R
 import okhttp3.MediaType
 import okhttp3.MultipartBody
+import okhttp3.OkHttpClient
 import okhttp3.RequestBody
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
+import java.util.concurrent.TimeUnit
 
 class Network(context : Context?) {
     private val apiService : ApiContract
     init {
         // Check how to get string value from resource
+        val okclient = OkHttpClient.Builder()
+                .connectTimeout(30, TimeUnit.SECONDS)
+                .readTimeout(30,TimeUnit.SECONDS)
+                .build()
         val retrofit = Retrofit.Builder()
                 .baseUrl(context?.getString(R.string.apiUrl)?:"http://api.beeReader.com")
                 .addConverterFactory(GsonConverterFactory.create())
+                .client(okclient)
                 .build()
         apiService = retrofit.create(ApiContract::class.java)
     }

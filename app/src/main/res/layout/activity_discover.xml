@@ -7,17 +7,22 @@
     android:layout_gravity="fill_vertical"
     android:background="#f1f1f1">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/AppBar"
+        app:elevation="6dp"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:background="@color/colorAccent2"
-        app:titleTextColor="@color/grey"
-        android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-        android:elevation="6dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="wrap_content">
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="@color/colorAccent2"
+            app:titleTextColor="@color/grey"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </android.support.design.widget.AppBarLayout>
 
     <FrameLayout
         android:id="@+id/fragment_container"
@@ -26,7 +31,7 @@
         app:layout_constraintBottom_toTopOf="@+id/activity_feed_btmNav"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+        app:layout_constraintTop_toBottomOf="@+id/AppBar" />
 
     <android.support.design.widget.BottomNavigationView
         app:itemTextColor="@color/black"

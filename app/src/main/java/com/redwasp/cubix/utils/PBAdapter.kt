@@ -10,10 +10,9 @@ import com.redwasp.cubix.R
 import com.redwasp.cubix.arch.IAdapter
 import com.redwasp.cubix.arch.IPresenter
 import com.redwasp.cubix.archComponents_Presenters.DiscoverActivityPresenter
-import com.redwasp.cubix.archComponents_Presenters.FeedListPresenter
 import com.redwasp.cubix.fragments.ReadingFragment
 
-class PBAdapter<T>(private val present : IPresenter) :
+class PBAdapter<T>() :
         RecyclerView.Adapter<RecyclerView.ViewHolder>(), IAdapter<T> {
     private val dataContainer : MutableList<T> = mutableListOf()
     val count
@@ -68,21 +67,11 @@ class PBAdapter<T>(private val present : IPresenter) :
                     val container = view.findViewById<View>(R.id.feed_list_body)
                     val bottomNav = view.findViewById<BottomNavigationView>(R.id.feed_item_feed_btmNav)
                     bottomNav.setOnNavigationItemSelectedListener {
-                        when(it.itemId){
-                            R.id.save -> {
-                                (present as FeedListPresenter).likeBtnClicked()
-                            }
-                            R.id.like -> {
-                                (present as FeedListPresenter).saveBtnClicked()
-                            }
-                        }
+
                         return@setOnNavigationItemSelectedListener false
                     }
                     container.setOnClickListener { _ ->
-                        if (present is DiscoverActivityPresenter){
-                            val feed = dataContainer[holder.adapterPosition] as? Feed
-                            present.navigate(ReadingFragment().setSearchUrl(feed?.url))
-                        }
+
                     }
                 }
             }
