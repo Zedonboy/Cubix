@@ -8,9 +8,6 @@ import android.view.ViewGroup
 import android.widget.ProgressBar
 import com.redwasp.cubix.R
 import com.redwasp.cubix.arch.IAdapter
-import com.redwasp.cubix.arch.IPresenter
-import com.redwasp.cubix.archComponents_Presenters.DiscoverActivityPresenter
-import com.redwasp.cubix.fragments.ReadingFragment
 
 class PBAdapter<T>() :
         RecyclerView.Adapter<RecyclerView.ViewHolder>(), IAdapter<T> {

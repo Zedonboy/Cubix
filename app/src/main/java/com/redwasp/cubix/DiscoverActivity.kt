@@ -47,6 +47,10 @@ class DiscoverActivity : AppCompatActivity(), DialogActivityInterface {
                     onSearchRequested()
                     return@setOnMenuItemClickListener true
                 }
+                R.id.profile -> {
+                    navigateToAnotherView(ProfileFragment())
+                    return@setOnMenuItemClickListener true
+                }
                 else -> {
                     return@setOnMenuItemClickListener false
                 }
@@ -57,18 +61,15 @@ class DiscoverActivity : AppCompatActivity(), DialogActivityInterface {
             when(it.itemId){
                 R.id.profile -> {
                     navigateToAnotherView(ProfileFragment())
-                    //presenter.navigate(ProfileFragment())
                 }
                 R.id.home -> {
                     navigateToAnotherView(HomeFragment())
-                    //presenter.navigate(FeedListFragment())
-                }
+                                    }
                 R.id.library -> {
                     navigateToAnotherView(MaterialRackFragment())
-                    //presenter.navigate(MaterialRackFragment())
                 }
                 R.id.take_note -> {
-                    //.showDialog()
+                    //navigateToAnotherView(MaterialRackFragment())
                 }
             }
 
@@ -77,10 +78,6 @@ class DiscoverActivity : AppCompatActivity(), DialogActivityInterface {
 
     }
 
-//    override fun update(){
-//
-//    }
-//
     private fun navigateToAnotherView(data: Fragment) {
                 supportFragmentManager.beginTransaction().replace(R.id.fragment_container,data,data.toString())
                         .addToBackStack(null)

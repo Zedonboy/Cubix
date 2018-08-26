@@ -44,4 +44,5 @@
     <string name="note_1">note_1</string>
     <string name="note">Note</string>
     <string name="profile">Profile</string>
+    <string name="emptyRack">Your Library is empty</string>
 </resources>

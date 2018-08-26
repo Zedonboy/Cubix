@@ -9,50 +9,44 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.redwasp.cubix.App
-import com.redwasp.cubix.DiscoverActivity
+import com.redwasp.cubix.DaoSession
 import com.redwasp.cubix.R
-import com.redwasp.cubix.arch.IAdapter
 import com.redwasp.cubix.arch.IMaterialRackFragment
-import com.redwasp.cubix.arch.IView
-import com.redwasp.cubix.archComponentsModels.MaterialFragmentModel
-import com.redwasp.cubix.archComponents_Presenters.MaterialFragmentPresenter
-import com.redwasp.cubix.utils.Feed
 import com.redwasp.cubix.utils.RackAdapter
 import kotlinx.android.synthetic.main.fragment_material_rack.*
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.experimental.withContext
 
 /**
  * A simple [Fragment] subclass.
  *
  */
 class MaterialRackFragment : Fragment(), IMaterialRackFragment {
-    private val presenter = MaterialFragmentPresenter()
-    private val model = MaterialFragmentModel()
     private lateinit var recyclerView: RecyclerView
+    private lateinit var daoSession: DaoSession
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        (activity as DiscoverActivity).selectedTab = R.id.library
-        presenter.init(this, model)
-        val global = (activity?.application as App).presenter
-        presenter.setGlobalPresenter(global)
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_material_rack, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        presenter.setUpDatabaseSession()
-        presenter.populate()
         initUI()
-        @Suppress("UNCHECKED_CAST")
-        presenter.setAdapter(recyclerView.adapter as IAdapter<Feed>)
+        getData()
     }
 
     override fun initUI(){
         recyclerView = material_rack_fragment.apply {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(context)
-            adapter = RackAdapter(presenter)
+            adapter = RackAdapter().apply {
+                addCOntrollingFragment(this@MaterialRackFragment)
+            }
         }
+
+        daoSession = (activity?.application as App).presenter.DaoSession
     }
     override fun update() {
         stopProgressBar()
@@ -60,20 +54,55 @@ class MaterialRackFragment : Fragment(), IMaterialRackFragment {
         recyclerView.adapter.notifyDataSetChanged()
     }
 
+    private fun getData(){
+        if (::daoSession.isInitialized){
+            val feeds = daoSession.feedRecordDao
+            val deferred = async { feeds.loadAll() }
+            launch {
+                try {
+                    val list = deferred.await()
+                    if (list.isEmpty()){
+                        withContext(UI){
+                            // Notify user visually
+                            notifyUserOfEmpty()
+                        }
+                        return@launch
+                    }
+                    (recyclerView.adapter as RackAdapter).addData(list)
+                    withContext(UI){
+                        update()
+                    }
+                } catch (e : Exception){
+                    withContext(UI){
+                        //Notify User visually
+                        notifyError()
+                    }
+                }
+
+            }
+        }
+    }
+
     override fun stopProgressBar() {
         material_progress_bar?.visibility = View.GONE
-
     }
     override fun startProgressBar(){
         material_progress_bar?.visibility = View.VISIBLE
     }
 
-    override fun <T> navigateToAnotherView(data: T) {
-        if (data is Fragment){
-            fragmentManager?.beginTransaction()?.add(R.id.fragment_container, data, data.toString())
-                    ?.commit()
-        }
+    private fun notifyError(){
+        material_progress_bar?.visibility = View.GONE
+        material_notify_emptty_rack?.visibility = View.GONE
+        material_notify_error?.visibility = View.VISIBLE
     }
 
+    private fun notifyUserOfEmpty(){
+        material_progress_bar?.visibility = View.GONE
+        material_notify_emptty_rack?.visibility = View.VISIBLE
+    }
+    override fun navToView(frag: Fragment) {
+        activity!!.supportFragmentManager.beginTransaction().replace(R.id.container, frag, frag.toString())
+                .commit()
+    }
     override fun toString(): String = "MaterialRackFragment"
 }
