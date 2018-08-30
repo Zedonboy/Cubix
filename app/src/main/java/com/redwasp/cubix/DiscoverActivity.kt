@@ -1,17 +1,15 @@
 package com.redwasp.cubix
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.support.v4.app.Fragment
-import android.support.v4.content.FileProvider
 import android.view.Menu
 import android.view.View
-import com.redwasp.cubix.archComponents_Presenters.DiscoverActivityPresenter
 import com.redwasp.cubix.fragments.DialogBox
 import com.redwasp.cubix.fragments.HomeFragment
 import com.redwasp.cubix.fragments.MaterialRackFragment
@@ -24,16 +22,11 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class DiscoverActivity : AppCompatActivity(), DialogActivityInterface {
-    private val presenter = DiscoverActivityPresenter()
     private val imageCaptureToken = 4
     private var imagePath = ""
-    var selectedTab : Int = 0
-    set(value) {
-        activity_feed_btmNav?.selectedItemId = value
-    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //presenter.init(this)
         setContentView(R.layout.activity_discover)
         setSupportActionBar(toolbar)
         initUI()
@@ -69,7 +62,8 @@ class DiscoverActivity : AppCompatActivity(), DialogActivityInterface {
                     navigateToAnotherView(MaterialRackFragment())
                 }
                 R.id.take_note -> {
-                    //navigateToAnotherView(MaterialRackFragment())
+                    // call camera app
+                    cameraDialog()
                 }
             }
 
@@ -91,28 +85,29 @@ class DiscoverActivity : AppCompatActivity(), DialogActivityInterface {
         return true
     }
 //
-    fun cameraDialog(){
+    private fun cameraDialog(){
         val dialogBox = DialogBox()
         dialogBox.setCallingActivity(this)
         dialogBox.show(fragmentManager, "dialog_box")
     }
 //
     private fun callCameraApp(){
-        // this method is called by the presenter
-        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        if (intent.resolveActivity(packageManager) !=  null){
-            val photoFile : File?
-            try {
-                photoFile = createImageFile()
-            } catch (e : IOException){
-                // Tell the user of the Issue
-                return
+            val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            // Ensure that there's a camera activity to handle the intent
+            if (takePictureIntent.resolveActivity(packageManager) != null) {
+                // Create the File where the photo should go
+                val photoFile : File?
+                try {
+                    photoFile = createImageFile()
+                } catch (e : IOException) {
+                    return
+                }
+                // Continue only if the File was successfully create
+                    val photoURI = Uri.fromFile(photoFile)
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                    startActivityForResult(takePictureIntent, imageCaptureToken)
+                }
             }
-            val photoFileUri = FileProvider.getUriForFile(this, "com.example.android.fileprovider", photoFile)
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, photoFileUri)
-            startActivityForResult(intent, imageCaptureToken)
-        }
-    }
     override fun onPositiveBtnClicked() {
         callCameraApp()
     }
@@ -121,15 +116,13 @@ class DiscoverActivity : AppCompatActivity(), DialogActivityInterface {
         //
     }
 
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == imageCaptureToken && resultCode == Activity.RESULT_OK) {
-            data?.putExtra(ImageUploadFragment.IMAGE_FILE_PATH, imagePath)
-            val fragment = ImageUploadFragment.newInstance(data?.extras)
-            presenter.navigate(fragment)
-        }
+        super.onActivityResult(requestCode, resultCode, data)
+        // Get the image path and send to Image Upload Fragment
+        //
+        val fragment = ImageUploadFragment.newInstance(null, imagePath)
+        navigateToAnotherView(fragment)
     }
-//
     @SuppressLint("SimpleDateFormat")
     @Throws(IOException::class)
     private fun createImageFile(): File {
@@ -144,23 +137,11 @@ class DiscoverActivity : AppCompatActivity(), DialogActivityInterface {
         )
 
         // Save a file: path for use with ACTION_VIEW intents
-        imagePath = "file:" + image.absolutePath
+        imagePath = image.absolutePath
         return image
-    }
-
-    override fun onBackPressed() {
-        super.onBackPressed()
-        supportFragmentManager.popBackStack()
-        if(supportFragmentManager.backStackEntryCount <= 1){
-            finish()
-        }
     }
 
     fun shutDownToolBar(){
         toolbar?.visibility = View.GONE
-    }
-
-    fun callCamFunc(){
-        callCameraApp()
     }
 }

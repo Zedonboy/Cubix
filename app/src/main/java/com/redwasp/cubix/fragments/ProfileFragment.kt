@@ -17,11 +17,6 @@ class ProfileFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
-        val activity = (activity as DiscoverActivity)
-        activity.shutDownToolBar()
-        activity.selectedTab = R.id.profile
-
         return inflater.inflate(R.layout.fragment_feed_list, container, false)
     }
 

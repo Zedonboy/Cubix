@@ -15,12 +15,10 @@ private const val ARG_PARAM1 = "data"
 private const val ARG_PARAM2 = MediaStore.EXTRA_OUTPUT
 
 class ImageUploadFragment : Fragment() {
-    // TODO: Rename and change types of parameters
 
-    private val presenter = ImageUploadPresenter()
     private var thumbnail: Bitmap? = null
-    private lateinit var fullPhotoPath: String
-    private var noteName = ""
+    lateinit var fullPhotoPath: String
+    var noteName = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,7 +31,6 @@ class ImageUploadFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        presenter.setNetwork((activity?.application as App).presenter.Network)
         return inflater.inflate(R.layout.fragment_image_upload, container, false)
     }
 
@@ -47,7 +44,6 @@ class ImageUploadFragment : Fragment() {
             _ ->
             noteName = image_upload_edit_Text?.text?.toString() ?: "note_1"
             // get the file absolute path
-            presenter.upload(fullPhotoPath)
         }
     }
 
@@ -59,9 +55,10 @@ class ImageUploadFragment : Fragment() {
 
     companion object {
         @JvmStatic
-        fun newInstance(param1: Bundle?) =
+        fun newInstance(param1: Bundle?, path : String) =
                 ImageUploadFragment().apply {
                     arguments = param1
+                    fullPhotoPath = path
                 }
         const val IMAGE_FILE_PATH = "image_file_path"
     }
