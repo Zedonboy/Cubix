@@ -32,7 +32,6 @@ class DiscoverActivity : AppCompatActivity(), DialogActivityInterface {
         initUI()
         navigateToAnotherView(HomeFragment())
     }
-
     private fun initUI() {
         toolbar?.setOnMenuItemClickListener {
             when(it.itemId){

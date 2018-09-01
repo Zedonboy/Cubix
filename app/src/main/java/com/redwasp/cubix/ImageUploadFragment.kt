@@ -22,10 +22,6 @@ class ImageUploadFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            thumbnail = it.get(ARG_PARAM1) as? Bitmap
-            fullPhotoPath = it.get(ImageUploadFragment.IMAGE_FILE_PATH) as String
-        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,

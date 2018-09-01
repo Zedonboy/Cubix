@@ -17,7 +17,8 @@ class ProfileFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_feed_list, container, false)
+        (activity as DiscoverActivity).shutDownToolBar()
+        return inflater.inflate(R.layout.fragment_profile, container, false)
     }
 
     override fun toString(): String = "ProfileFragment"

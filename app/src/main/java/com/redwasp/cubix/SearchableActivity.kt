@@ -5,35 +5,69 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.app.SearchManager
 import android.content.Context
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.Menu
-import com.redwasp.cubix.archComponents_Presenters.SearchableActivityPresenter
 import kotlinx.android.synthetic.main.activity_searchable.*
 import android.support.v7.widget.SearchView
-import com.redwasp.cubix.archComponentsModels.SearchableActivityModel
+import android.view.View
+import com.redwasp.cubix.utils.Feed
+import com.redwasp.cubix.utils.Network
+import com.redwasp.cubix.utils.PBAdapter
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.experimental.withContext
 
 class SearchableActivity : AppCompatActivity() {
-    private val presenter = SearchableActivityPresenter()
-    private val model = SearchableActivityModel()
-
+    private lateinit var network: Network
+    private lateinit var recyclerView: RecyclerView
+    private var query : String? = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //presenter.init()
         setContentView(R.layout.activity_searchable)
-        handle(intent)
-    }
-
-    private fun handle(intent: Intent){
-        if (Intent.ACTION_SEARCH == intent.action) {
-            val query = intent.getStringExtra(SearchManager.QUERY)
-            presenter.search(query)
-        }
+        setSupportActionBar(searchable_toolbar)
+        initUI()
+        getData()
     }
 
     private fun initUI(){
+        if (Intent.ACTION_SEARCH == intent.action) {
+            query = intent.getStringExtra(SearchManager.QUERY)
+        }
+        recyclerView = search_activity_recyclerView!!.apply {
+                            setHasFixedSize(true)
+                            adapter = PBAdapter<Feed>()
+                            layoutManager = LinearLayoutManager(context)
+                        }
+        network = (application as App).presenter.Network
+    }
 
-        setSupportActionBar(searchable_toolbar)
-
-        search_activity_recyclerView?.adapter
+    @Suppress("UNCHECKED_CAST")
+    private fun getData(){
+        val defered = async { network.searchForFeed(query!!) }
+        launch {
+            try {
+                val list = defered.await()
+                if(list.isEmpty()){
+                    withContext(UI){
+                        // notify user visually
+                        NoSearchResult()
+                    }
+                    return@launch
+                }
+                withContext(UI){
+                    (this@SearchableActivity.recyclerView.adapter as PBAdapter<Feed>).addData(list)
+                    showlists()
+                    this@SearchableActivity.recyclerView.adapter.notifyDataSetChanged()
+                }
+            } catch (e : Exception) {
+                withContext(UI){
+                    // notify User visually
+                    showError()
+                }
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -49,5 +83,19 @@ class SearchableActivity : AppCompatActivity() {
         val query = intent?.getStringExtra(SearchManager.QUERY)
         searchView.setQuery(query ?: "", false)
         return true
+    }
+
+    private fun showlists(){
+        search_activity_progress_bar?.visibility = View.GONE
+        search_activity_recyclerView?.visibility = View.VISIBLE
+    }
+    private fun NoSearchResult(){
+        search_activity_progress_bar?.visibility = View.GONE
+        search_activity_notfound?.visibility = View.VISIBLE
+    }
+
+    private fun showError(){
+        search_activity_progress_bar?.visibility = View.GONE
+        search_activity_error?.visibility = View.GONE
     }
 }

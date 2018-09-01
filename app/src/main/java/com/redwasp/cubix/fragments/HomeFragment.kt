@@ -52,6 +52,7 @@ private lateinit var recyclerView : RecyclerView
         network = ((activity?.application as App?)?.presenter?.Network) ?: Network(context)
     }
 
+    @Suppress("UNCHECKED_CAST")
     private fun getData(){
 
         val deferred = async { network.getFeeds() }
@@ -65,6 +66,7 @@ private lateinit var recyclerView : RecyclerView
                     return@launch
                 }
                 withContext(UI){
+                    (this@HomeFragment.recyclerView.adapter as PBAdapter<Feed>).addData(list)
                     this@HomeFragment.showLists()
                     this@HomeFragment.recyclerView.adapter.notifyDataSetChanged()
                 }
