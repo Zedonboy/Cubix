@@ -34,6 +34,7 @@ private lateinit var recyclerView : RecyclerView
         getData()
     }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        (activity as DiscoverActivity).setUpToolBAr()
         return inflater.inflate(R.layout.fragment_feed_list, container, false)
     }
 
@@ -49,7 +50,7 @@ private lateinit var recyclerView : RecyclerView
             adapter = PBAdapter<Feed>()
         }
         feed_list_swipe_refresh_layout?.setOnRefreshListener(this)
-        network = ((activity?.application as App?)?.presenter?.Network) ?: Network(context)
+        network = (activity?.application as App).network
     }
 
     @Suppress("UNCHECKED_CAST")

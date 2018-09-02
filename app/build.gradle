@@ -46,17 +46,13 @@ dependencies {
 
     // Third Party Stuffs
     //implementation 'link.fls:swipestack:0.3.0'
-    //implementation 'com.aurelhubert:ahbottomnavigation:2.1.0'
     implementation 'org.greenrobot:greendao:3.2.2' // add library
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     implementation 'com.google.code.gson:gson:2.8.4'
-    //implementation "io.reactivex.rxjava2:rxjava:2.1.14-RC1"
     implementation "com.squareup.retrofit2:converter-gson:2.4.0"
-    //implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     implementation 'com.google.dagger:dagger:2.16'
     implementation 'br.com.simplepass:loading-button-android:1.14.0'
-    //implementation 'com.google.dagger:dagger-compiler:2.16'
     kapt 'com.google.dagger:dagger-compiler:2.16'
 
     // Android Stuffs

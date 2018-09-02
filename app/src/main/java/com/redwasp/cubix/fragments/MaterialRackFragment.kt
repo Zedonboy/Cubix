@@ -46,7 +46,7 @@ class MaterialRackFragment : Fragment(), IMaterialRackFragment {
             }
         }
 
-        daoSession = (activity?.application as App).presenter.DaoSession
+        daoSession = (activity?.application as App).daoSession
     }
     override fun update() {
         stopProgressBar()

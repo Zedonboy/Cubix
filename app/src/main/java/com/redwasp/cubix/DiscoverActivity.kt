@@ -119,7 +119,7 @@ class DiscoverActivity : AppCompatActivity(), DialogActivityInterface {
         super.onActivityResult(requestCode, resultCode, data)
         // Get the image path and send to Image Upload Fragment
         //
-        val fragment = ImageUploadFragment.newInstance(null, imagePath)
+        val fragment = ImageUploadFragment.newInstance(imagePath)
         navigateToAnotherView(fragment)
     }
     @SuppressLint("SimpleDateFormat")
@@ -142,5 +142,9 @@ class DiscoverActivity : AppCompatActivity(), DialogActivityInterface {
 
     fun shutDownToolBar(){
         toolbar?.visibility = View.GONE
+    }
+
+    fun setUpToolBAr(){
+        toolbar?.visibility = View.VISIBLE
     }
 }

@@ -4,12 +4,9 @@ import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.app.SearchManager
-import android.content.Context
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.view.Menu
 import kotlinx.android.synthetic.main.activity_searchable.*
-import android.support.v7.widget.SearchView
 import android.view.View
 import com.redwasp.cubix.utils.Feed
 import com.redwasp.cubix.utils.Network
@@ -26,7 +23,6 @@ class SearchableActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_searchable)
-        setSupportActionBar(searchable_toolbar)
         initUI()
         getData()
     }
@@ -36,11 +32,15 @@ class SearchableActivity : AppCompatActivity() {
             query = intent.getStringExtra(SearchManager.QUERY)
         }
         recyclerView = search_activity_recyclerView!!.apply {
-                            setHasFixedSize(true)
-                            adapter = PBAdapter<Feed>()
-                            layoutManager = LinearLayoutManager(context)
-                        }
-        network = (application as App).presenter.Network
+            setHasFixedSize(true)
+            adapter = PBAdapter<Feed>()
+            layoutManager = LinearLayoutManager(context)
+        }
+        network = (application as App).network
+        search_activity_searchview?.apply {
+            val query = intent?.getStringExtra(SearchManager.QUERY)
+            setQuery(query,false)
+        }
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -70,32 +70,17 @@ class SearchableActivity : AppCompatActivity() {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        // Inflate the options menu from XML
-        val inflater = menuInflater
-        inflater.inflate(R.menu.searchable_menu, menu)
-        // Get the SearchView and set the searchable configuration
-        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
-        val searchView = menu?.findItem(R.id.search_View)?.actionView as SearchView
-        // Assumes current activity is the searchable activity
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
-        searchView.setIconifiedByDefault(false) // Do not iconify the widget; expand it by default
-        val query = intent?.getStringExtra(SearchManager.QUERY)
-        searchView.setQuery(query ?: "", false)
-        return true
-    }
-
     private fun showlists(){
-        search_activity_progress_bar?.visibility = View.GONE
+        search_activity_progressbar?.visibility = View.GONE
         search_activity_recyclerView?.visibility = View.VISIBLE
     }
     private fun NoSearchResult(){
-        search_activity_progress_bar?.visibility = View.GONE
-        search_activity_notfound?.visibility = View.VISIBLE
+        search_activity_progressbar?.visibility = View.GONE
+        search_activity_noresultfound?.visibility = View.VISIBLE
     }
 
     private fun showError(){
-        search_activity_progress_bar?.visibility = View.GONE
-        search_activity_error?.visibility = View.GONE
+        search_activity_progressbar?.visibility = View.GONE
+        search_activity_errorView?.visibility = View.GONE
     }
 }

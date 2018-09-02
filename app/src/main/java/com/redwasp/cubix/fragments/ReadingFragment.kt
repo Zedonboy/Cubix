@@ -52,7 +52,7 @@ class ReadingFragment : Fragment() {
     private fun initUI(){
         reading_fragment_toolbar?.title = title
         reading_fragment_title?.text = title
-        network = (activity!!.application as App).presenter.Network
+        network = (activity!!.application as App).network
     }
 
     companion object {
