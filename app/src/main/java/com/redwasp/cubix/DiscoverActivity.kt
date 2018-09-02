@@ -24,13 +24,16 @@ import java.util.*
 class DiscoverActivity : AppCompatActivity(), DialogActivityInterface {
     private val imageCaptureToken = 4
     private var imagePath = ""
+    private var clicked = 0
 
+    var SelectTab : Int = 0
+    set(value) { activity_feed_btmNav?.selectedItemId = value }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_discover)
         setSupportActionBar(toolbar)
         initUI()
-        navigateToAnotherView(HomeFragment())
+        activity_feed_btmNav?.selectedItemId = R.id.home
     }
     private fun initUI() {
         toolbar?.setOnMenuItemClickListener {
@@ -51,13 +54,14 @@ class DiscoverActivity : AppCompatActivity(), DialogActivityInterface {
 
         activity_feed_btmNav?.setOnNavigationItemSelectedListener {
             when(it.itemId){
-                R.id.profile -> {
-                    navigateToAnotherView(ProfileFragment())
-                }
                 R.id.home -> {
+                    if(clicked == R.id.home) return@setOnNavigationItemSelectedListener true
+                    clicked = R.id.home
                     navigateToAnotherView(HomeFragment())
                                     }
                 R.id.library -> {
+                    if(clicked == R.id.library) return@setOnNavigationItemSelectedListener true
+                    clicked = R.id.library
                     navigateToAnotherView(MaterialRackFragment())
                 }
                 R.id.take_note -> {

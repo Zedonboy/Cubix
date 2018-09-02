@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.redwasp.cubix.App
 import com.redwasp.cubix.DaoSession
+import com.redwasp.cubix.DiscoverActivity
 import com.redwasp.cubix.R
 import com.redwasp.cubix.arch.IMaterialRackFragment
 import com.redwasp.cubix.utils.RackAdapter
@@ -27,8 +28,10 @@ class MaterialRackFragment : Fragment(), IMaterialRackFragment {
     private lateinit var recyclerView: RecyclerView
     private lateinit var daoSession: DaoSession
 
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
+        (activity as DiscoverActivity).SelectTab = R.id.library
         return inflater.inflate(R.layout.fragment_material_rack, container, false)
     }
 

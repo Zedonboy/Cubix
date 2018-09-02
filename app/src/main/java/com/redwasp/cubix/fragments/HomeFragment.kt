@@ -33,7 +33,9 @@ private lateinit var recyclerView : RecyclerView
         feed_list_swipe_refresh_layout?.isRefreshing = true
         getData()
     }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        (activity as DiscoverActivity).SelectTab = R.id.home
         (activity as DiscoverActivity).setUpToolBAr()
         return inflater.inflate(R.layout.fragment_feed_list, container, false)
     }
@@ -82,7 +84,7 @@ private lateinit var recyclerView : RecyclerView
     private fun showError(){
         feed_list_swipe_refresh_layout?.isRefreshing = false
         fragment_feed_list_progressbar?.visibility = View.GONE
-        feed_list_error_constraint_layout.visibility = View.VISIBLE
+        feed_list_error_constraint_layout?.visibility = View.VISIBLE
     }
 
     private fun showLists(){
