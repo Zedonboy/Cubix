@@ -63,7 +63,7 @@ class SearchableActivity : AppCompatActivity() {
                 }
             } catch (e : Exception) {
                 withContext(UI){
-                    // notify User visually
+                    // notify User visu
                     showError()
                 }
             }
@@ -81,6 +81,6 @@ class SearchableActivity : AppCompatActivity() {
 
     private fun showError(){
         search_activity_progressbar?.visibility = View.GONE
-        search_activity_errorView?.visibility = View.GONE
+        search_activity_errorView?.visibility = View.VISIBLE
     }
 }
