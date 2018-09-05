@@ -10,6 +10,8 @@ import android.provider.MediaStore
 import android.support.v4.app.Fragment
 import android.view.Menu
 import android.view.View
+import android.widget.Toast
+import com.redwasp.cubix.arch.IDiscoverActivity
 import com.redwasp.cubix.fragments.DialogBox
 import com.redwasp.cubix.fragments.HomeFragment
 import com.redwasp.cubix.fragments.MaterialRackFragment
@@ -21,7 +23,7 @@ import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 
-class DiscoverActivity : AppCompatActivity(), DialogActivityInterface {
+class DiscoverActivity : AppCompatActivity(), DialogActivityInterface, IDiscoverActivity {
     private val imageCaptureToken = 4
     private var imagePath = ""
     private var clicked = 0
@@ -66,6 +68,8 @@ class DiscoverActivity : AppCompatActivity(), DialogActivityInterface {
                 }
                 R.id.take_note -> {
                     // call camera app
+                    if (clicked == R.id.take_note) return@setOnNavigationItemSelectedListener true
+                    clicked = R.id.take_note
                     cameraDialog()
                 }
             }
@@ -75,7 +79,7 @@ class DiscoverActivity : AppCompatActivity(), DialogActivityInterface {
 
     }
 
-    private fun navigateToAnotherView(data: Fragment) {
+     override fun navigateToAnotherView(data: Fragment) {
                 supportFragmentManager.beginTransaction().replace(R.id.fragment_container,data,data.toString())
                         .addToBackStack(null)
                         .commit()
@@ -150,5 +154,10 @@ class DiscoverActivity : AppCompatActivity(), DialogActivityInterface {
 
     fun setUpToolBAr(){
         toolbar?.visibility = View.VISIBLE
+    }
+
+    override fun makeToast(mssg: String) {
+        val toast = Toast.makeText(applicationContext, mssg, Toast.LENGTH_LONG)
+        toast.show()
     }
 }

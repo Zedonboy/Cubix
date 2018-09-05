@@ -1,6 +1,5 @@
 package com.redwasp.cubix.fragments
 
-
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -10,6 +9,10 @@ import com.redwasp.cubix.App
 import com.redwasp.cubix.R
 import com.redwasp.cubix.utils.Network
 import kotlinx.android.synthetic.main.fragment_reading.*
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.experimental.withContext
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -46,25 +49,51 @@ class ReadingFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
+        initUI()
     }
 
     private fun initUI(){
         reading_fragment_toolbar?.title = title
         reading_fragment_title?.text = title
         network = (activity!!.application as App).network
+        reading_fragment_tryAgain?.setOnClickListener { _ ->
+            reading_fragment_body?.visibility = View.GONE
+            reading_fragment_errorVIew?.visibility = View.GONE
+            reading_fragment_progressbar?.visibility = View.VISIBLE
+            getFullContent()
+        }
+    }
+
+    private fun getFullContent(){
+        val deferred = async { network.getFullText(searchURL?:"") }
+        launch {
+            try {
+                content = deferred.await()
+                withContext(UI){
+                    showFullContent()
+                }
+            } catch (e : Exception){
+                withContext(UI){
+                    showError()
+                }
+            }
+        }
+    }
+
+    private fun showFullContent(){
+        reading_fragment_errorVIew?.visibility = View.GONE
+        reading_fragment_progressbar?.visibility = View.GONE
+        reading_fragment_body?.visibility = View.VISIBLE
+        reading_fragment_body?.text = content
+    }
+
+    private fun showError(){
+        reading_fragment_body?.visibility = View.GONE
+        reading_fragment_progressbar?.visibility = View.GONE
+        reading_fragment_errorVIew?.visibility = View.VISIBLE
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param title Parameter 1.
-         * @param searchURL Parameter 2.
-         * @return A new instance of fragment ReadingFragment.
-         */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(title: String?, searchURL: String?, content: String?) =
                 ReadingFragment().apply {

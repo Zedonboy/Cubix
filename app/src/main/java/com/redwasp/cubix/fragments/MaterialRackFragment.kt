@@ -45,7 +45,8 @@ class MaterialRackFragment : Fragment(), IMaterialRackFragment {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(context)
             adapter = RackAdapter().apply {
-                addCOntrollingFragment(this@MaterialRackFragment)
+                Controller = activity as DiscoverActivity
+                daoSession = (activity?.application as App).daoSession
             }
         }
 

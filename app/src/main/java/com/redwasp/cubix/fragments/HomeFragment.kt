@@ -49,7 +49,11 @@ private lateinit var recyclerView : RecyclerView
         recyclerView = feed_list_recyclerView!!.apply {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(context)
-            adapter = PBAdapter<Feed>()
+            adapter = PBAdapter<Feed>().apply {
+                setActivity = activity as DiscoverActivity
+                setDaoSession = (activity?.application as App).daoSession
+                Network = (activity?.application as App).network
+            }
         }
         feed_list_swipe_refresh_layout?.setOnRefreshListener(this)
         network = (activity?.application as App).network

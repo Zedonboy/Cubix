@@ -77,11 +77,11 @@ class Network(context : Context?) {
         } else throw NetworkNotSuccesfulException("Network Call wasn't successful")
     }
 
-    fun getFullText(searchUrl : String) : Feed?{
+    fun getFullText(searchUrl : String) : String{
         val handler = apiService.getFullText(searchUrl)
         val resp = handler.execute()
         return if (resp.isSuccessful and (resp.code() == 200)){
-            resp.body()
+            resp.body()?:""
         } else throw NetworkNotSuccesfulException("Network call wasn't successful")
     }
 

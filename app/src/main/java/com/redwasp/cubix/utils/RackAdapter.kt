@@ -3,16 +3,28 @@ package com.redwasp.cubix.utils
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.TextView
+import com.redwasp.cubix.DaoSession
 import com.redwasp.cubix.FeedRecord
 import com.redwasp.cubix.R
 import com.redwasp.cubix.arch.IAdapter
+import com.redwasp.cubix.arch.IDiscoverActivity
 import com.redwasp.cubix.arch.IMaterialRackFragment
 import com.redwasp.cubix.fragments.ReadingFragment
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.experimental.withContext
 
 class RackAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(), IAdapter<FeedRecord> {
     private val dataContainer = mutableListOf<FeedRecord>()
-    private lateinit var controller : IMaterialRackFragment
+    private var controller : IDiscoverActivity? = null
+    var Controller : IDiscoverActivity? = null
+    set(value) {controller = value}
+
+    private var _daoSession : DaoSession? = null
+    var daoSession : DaoSession? = null
+    set(value) {_daoSession = value}
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.material_book, parent, false)
         return ViewHolder(view)
@@ -25,28 +37,45 @@ class RackAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(), IAdapter<Fe
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if(holder is ViewHolder){
             val view = holder.view
-            val feedrecord = dataContainer[holder.adapterPosition]
+            val feedrecord = dataContainer[position]
             val title = view.findViewById<TextView>(R.id.material_book_title)
             val desc = view.findViewById<TextView>(R.id.material_book_desc)
+            val deletebtn = view.findViewById<ImageButton>(R.id.material_book_delete)
+            deletebtn.setOnClickListener {
+                val record = _daoSession?.feedRecordDao
+                launch {
+                    try {
+                        record?.delete(dataContainer[position])
+                        dataContainer.removeAt(position)
+                        withContext(UI){
+                            notifyDataSetChanged()
+                            controller?.makeToast("${feedrecord.title} is deleted")
 
-            title.text = feedrecord.title
-            desc.text = feedrecord.body
-            view.setOnClickListener { _ ->
-                // call on read activiy
-                if(this@RackAdapter::controller.isInitialized){
-                    val  feedrec = dataContainer[holder.adapterPosition]
-                    val fragment = ReadingFragment.newInstance(feedrec.title, null, feedrec.body)
-                    controller.navToView(fragment)
+                        }
+                    } catch (e : Exception){
+                        withContext(UI){
+                            controller?.makeToast("${feedrecord.title} could not be deleted")
+                        }
+                    }
                 }
+            }
+            with(title){
+                text = feedrecord.title
+                setOnClickListener { callReaderFrag(position) }
+            }
+            with(desc){
+                text = feedrecord.body
+                setOnClickListener { callReaderFrag(position) }
             }
         }
     }
 
+    private fun callReaderFrag(position: Int){
+        val record = dataContainer[position]
+        val frag = ReadingFragment.newInstance(record.title, null, record.body)
+        controller?.navigateToAnotherView(frag)
+    }
     override fun addData(data: Collection<FeedRecord>) {
         dataContainer.addAll(data)
-    }
-
-    fun addCOntrollingFragment(activity : IMaterialRackFragment){
-        controller = activity
     }
 }

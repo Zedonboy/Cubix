@@ -10,7 +10,7 @@ interface ApiContract {
     fun likeFeedByUser(@Path("username")name: String, @Path("feedTitle")feedTitle:String) : Call<Unit>
 
     @GET(value = "{searchUrl}/?getBody=true")
-    fun getFullText(@Path("searchUrl") url: String): Call<Feed>
+    fun getFullText(@Path("searchUrl") url: String): Call<String>
 
     @GET("users/{username}")
     fun getFeedsSavedByUser(@Path("username") name: String): Call<List<Feed>>

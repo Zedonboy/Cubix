@@ -10,7 +10,7 @@ import org.greenrobot.greendao.annotation.Generated;
         nameInDb = "feedTable",
         indexes = {
                 @Index(value = "title", unique = false),
-                @Index(value = "searchUrl", unique = false)
+                @Index(value = "searchUrl", unique = true)
         }
 )
 public class FeedRecord {
