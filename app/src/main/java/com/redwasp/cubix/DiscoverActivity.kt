@@ -1,6 +1,7 @@
 package com.redwasp.cubix
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.support.v7.app.AppCompatActivity
@@ -11,6 +12,8 @@ import android.support.v4.app.Fragment
 import android.view.Menu
 import android.view.View
 import android.widget.Toast
+import com.firebase.ui.auth.AuthUI
+import com.google.firebase.auth.FirebaseAuth
 import com.redwasp.cubix.arch.IDiscoverActivity
 import com.redwasp.cubix.fragments.DialogBox
 import com.redwasp.cubix.fragments.HomeFragment
@@ -25,6 +28,7 @@ import java.util.*
 
 class DiscoverActivity : AppCompatActivity(), DialogActivityInterface, IDiscoverActivity {
     private val imageCaptureToken = 4
+    private val signInToken = 2
     private var imagePath = ""
     private var clicked = 0
 
@@ -79,6 +83,20 @@ class DiscoverActivity : AppCompatActivity(), DialogActivityInterface, IDiscover
 
     }
 
+    override fun userSignIn() {
+        val providers = listOf(
+                AuthUI.IdpConfig.EmailBuilder().build(),
+                AuthUI.IdpConfig.GoogleBuilder().build(),
+                AuthUI.IdpConfig.FacebookBuilder().build()
+        )
+        startActivityForResult(
+                AuthUI.getInstance()
+                        .createSignInIntentBuilder()
+                        .setAvailableProviders(providers)
+                        .build(),
+                signInToken
+        )
+    }
      override fun navigateToAnotherView(data: Fragment) {
                 supportFragmentManager.beginTransaction().replace(R.id.fragment_container,data,data.toString())
                         .addToBackStack(null)
@@ -126,9 +144,22 @@ class DiscoverActivity : AppCompatActivity(), DialogActivityInterface, IDiscover
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         // Get the image path and send to Image Upload Fragment
-        //
-        val fragment = ImageUploadFragment.newInstance(imagePath)
-        navigateToAnotherView(fragment)
+        when(requestCode){
+            imageCaptureToken -> {
+                val fragment = ImageUploadFragment.newInstance(imagePath)
+                navigateToAnotherView(fragment)
+            }
+            signInToken -> {
+                // think of what to do here
+                if (resultCode == Activity.RESULT_OK){
+                    val auth = FirebaseAuth.getInstance()
+                    val app = application as App
+                    app.CurrentUser = auth.currentUser
+                } else {
+                    makeToast("Error Signing In")
+                }
+            }
+        }
     }
     @SuppressLint("SimpleDateFormat")
     @Throws(IOException::class)

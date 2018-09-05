@@ -9,4 +9,8 @@ interface IDiscoverActivity {
     fun makeToast(mssg : String){
         throw NotImplementedError("This method must be implemented by subclass")
     }
+
+    fun userSignIn(){
+        throw NotImplementedError("this method must be implemented")
+    }
 }

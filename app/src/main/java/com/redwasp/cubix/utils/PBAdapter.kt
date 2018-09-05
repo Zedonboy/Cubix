@@ -7,9 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ProgressBar
 import android.widget.TextView
-import com.redwasp.cubix.DaoSession
-import com.redwasp.cubix.FeedRecord
-import com.redwasp.cubix.R
+import com.redwasp.cubix.*
 import com.redwasp.cubix.arch.IAdapter
 import com.redwasp.cubix.arch.IDiscoverActivity
 import com.redwasp.cubix.fragments.ReadingFragment
@@ -98,6 +96,12 @@ class PBAdapter<T> :
                         }
                     } else {
                         imgBtn.setOnClickListener {
+                            val app = (discoverActivity as DiscoverActivity).application as App
+                            if(app.CurrentUser == null){
+                                // not signed in
+                                discoverActivity?.userSignIn()
+                                return@setOnClickListener
+                            }
                             val imageBtnView = it as ImageButton
                             if (!imageBtnView.isEnabled) return@setOnClickListener
                             imageBtnView.isEnabled = false

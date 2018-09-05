@@ -1,10 +1,16 @@
 package com.redwasp.cubix
 
+import android.content.Context
 import android.support.multidex.MultiDexApplication
+import com.google.firebase.auth.FirebaseUser
+import com.google.gson.Gson
 import com.redwasp.cubix.utils.Network
+import com.redwasp.cubix.utils.User
 
 class App : MultiDexApplication(){
-
+    private var _user : FirebaseUser? = null
+    var CurrentUser : FirebaseUser? = null
+    set(value) {_user = value}
     private lateinit var _daosession : DaoSession
     val daoSession : DaoSession
     get() = this._daosession
