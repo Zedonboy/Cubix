@@ -13,4 +13,8 @@ interface IDiscoverActivity {
     fun userSignIn(){
         throw NotImplementedError("this method must be implemented")
     }
+
+    fun userSignOut(){
+        throw NotImplementedError("This method must be implemented")
+    }
 }

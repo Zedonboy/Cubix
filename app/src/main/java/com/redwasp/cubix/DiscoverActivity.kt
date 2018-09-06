@@ -146,7 +146,9 @@ class DiscoverActivity : AppCompatActivity(), DialogActivityInterface, IDiscover
         // Get the image path and send to Image Upload Fragment
         when(requestCode){
             imageCaptureToken -> {
-                val fragment = ImageUploadFragment.newInstance(imagePath)
+                val fragment = ImageUploadFragment().apply {
+                    fullImagePath = imagePath
+                }
                 navigateToAnotherView(fragment)
             }
             signInToken -> {
@@ -187,6 +189,15 @@ class DiscoverActivity : AppCompatActivity(), DialogActivityInterface, IDiscover
         toolbar?.visibility = View.VISIBLE
     }
 
+    override fun userSignOut() {
+        AuthUI.getInstance()
+                .signOut(this)
+                .addOnCompleteListener {
+                    // Holy Snap WHy!!!!
+                    (application as App).CurrentUser = null
+                    navigateToAnotherView(ProfileFragment())
+                }
+    }
     override fun makeToast(mssg: String) {
         val toast = Toast.makeText(applicationContext, mssg, Toast.LENGTH_LONG)
         toast.show()
