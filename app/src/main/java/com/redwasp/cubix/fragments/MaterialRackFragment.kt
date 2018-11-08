@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,10 +16,10 @@ import com.redwasp.cubix.R
 import com.redwasp.cubix.arch.IMaterialRackFragment
 import com.redwasp.cubix.utils.RackAdapter
 import kotlinx.android.synthetic.main.fragment_material_rack.*
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.async
-import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.withContext
+import kotlinx.coroutines.android.UI
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /**
  * A simple [Fragment] subclass.
@@ -31,7 +32,8 @@ class MaterialRackFragment : Fragment(), IMaterialRackFragment {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        (activity as DiscoverActivity).SelectTab = R.id.library
+        (activity as DiscoverActivity).selectTab = R.id.library
+        (activity as DiscoverActivity).setUpToolBAr()
         return inflater.inflate(R.layout.fragment_material_rack, container, false)
     }
 
@@ -55,7 +57,7 @@ class MaterialRackFragment : Fragment(), IMaterialRackFragment {
     override fun update() {
         stopProgressBar()
         recyclerView.visibility = View.VISIBLE
-        recyclerView.adapter.notifyDataSetChanged()
+        recyclerView.adapter?.notifyDataSetChanged()
     }
 
     private fun getData(){
@@ -77,6 +79,7 @@ class MaterialRackFragment : Fragment(), IMaterialRackFragment {
                         update()
                     }
                 } catch (e : Exception){
+                    Log.e("material fetch database", e.message)
                     withContext(UI){
                         //Notify User visually
                         notifyError()

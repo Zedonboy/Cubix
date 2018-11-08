@@ -7,8 +7,9 @@ import android.os.Bundle
 import android.os.Handler
 import android.view.View
 import com.firebase.ui.auth.AuthUI
-import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.auth.FirebaseAuth
+import com.redwasp.cubix.fragments.OneMoreThing
+import com.redwasp.cubix.fragments.splashFragment
 import kotlinx.android.synthetic.main.launch_window.*
 
 
@@ -17,7 +18,10 @@ class splashActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.launch_window)
+        setContentView(R.layout.activity_splash)
+        // add the fragment
+        supportFragmentManager.beginTransaction().replace(R.id.splash_activity_container,splashFragment())
+                .commitNow()
         Handler().postDelayed({
             /* Create an Intent that will start the Menu-Activity. */
             val auth = FirebaseAuth.getInstance()
@@ -33,12 +37,10 @@ class splashActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == requestToken){
-            val response = IdpResponse.fromResultIntent(data)
             if (resultCode == Activity.RESULT_OK){
-                val auth = FirebaseAuth.getInstance()
-                val app = application as App
-                app.CurrentUser = auth.currentUser
-                gotoNxtActivity()
+
+                supportFragmentManager.beginTransaction().replace(R.id.splash_activity_container, OneMoreThing())
+                        .commitNow()
             } else {
                 splash_activity_retry?.visibility = View.VISIBLE
                 splash_activity_retry?.setOnClickListener{_ ->
@@ -52,7 +54,7 @@ class splashActivity : AppCompatActivity() {
         }
     }
 
-    private fun gotoNxtActivity(){
+    fun gotoNxtActivity(){
         val mainIntent = Intent(this@splashActivity, DiscoverActivity::class.java)
         this@splashActivity.startActivity(mainIntent)
         this@splashActivity.finish()
@@ -67,6 +69,7 @@ class splashActivity : AppCompatActivity() {
                 AuthUI.getInstance()
                         .createSignInIntentBuilder()
                         .setAvailableProviders(providers)
+                        .setLogo(R.drawable.cubix_logo)
                         .build(),
                 requestToken
         )

@@ -26,6 +26,8 @@ public class FeedRecordDao extends AbstractDao<FeedRecord, Long> {
         public final static Property Title = new Property(1, String.class, "title", false, "title");
         public final static Property Body = new Property(2, String.class, "body", false, "BODY");
         public final static Property SearchUrl = new Property(3, String.class, "searchUrl", false, "SEARCH_URL");
+        public final static Property ParcelableState = new Property(4, String.class, "parcelableState", false, "PARCELABLE_STATE");
+        public final static Property Imagebase64 = new Property(5, String.class, "imagebase64", false, "IMAGEBASE64");
     }
 
 
@@ -44,11 +46,13 @@ public class FeedRecordDao extends AbstractDao<FeedRecord, Long> {
                 "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: id
                 "\"title\" TEXT," + // 1: title
                 "\"BODY\" TEXT," + // 2: body
-                "\"SEARCH_URL\" TEXT);"); // 3: searchUrl
+                "\"SEARCH_URL\" TEXT," + // 3: searchUrl
+                "\"PARCELABLE_STATE\" TEXT," + // 4: parcelableState
+                "\"IMAGEBASE64\" TEXT);"); // 5: imagebase64
         // Add Indexes
         db.execSQL("CREATE INDEX " + constraint + "IDX_feedTable_title ON \"feedTable\"" +
                 " (\"title\" ASC);");
-        db.execSQL("CREATE INDEX " + constraint + "IDX_feedTable_SEARCH_URL ON \"feedTable\"" +
+        db.execSQL("CREATE UNIQUE INDEX " + constraint + "IDX_feedTable_SEARCH_URL ON \"feedTable\"" +
                 " (\"SEARCH_URL\" ASC);");
     }
 
@@ -81,6 +85,16 @@ public class FeedRecordDao extends AbstractDao<FeedRecord, Long> {
         if (searchUrl != null) {
             stmt.bindString(4, searchUrl);
         }
+ 
+        String parcelableState = entity.getParcelableState();
+        if (parcelableState != null) {
+            stmt.bindString(5, parcelableState);
+        }
+ 
+        String imagebase64 = entity.getImagebase64();
+        if (imagebase64 != null) {
+            stmt.bindString(6, imagebase64);
+        }
     }
 
     @Override
@@ -106,6 +120,16 @@ public class FeedRecordDao extends AbstractDao<FeedRecord, Long> {
         if (searchUrl != null) {
             stmt.bindString(4, searchUrl);
         }
+ 
+        String parcelableState = entity.getParcelableState();
+        if (parcelableState != null) {
+            stmt.bindString(5, parcelableState);
+        }
+ 
+        String imagebase64 = entity.getImagebase64();
+        if (imagebase64 != null) {
+            stmt.bindString(6, imagebase64);
+        }
     }
 
     @Override
@@ -119,7 +143,9 @@ public class FeedRecordDao extends AbstractDao<FeedRecord, Long> {
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
             cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // title
             cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // body
-            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3) // searchUrl
+            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // searchUrl
+            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // parcelableState
+            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5) // imagebase64
         );
         return entity;
     }
@@ -130,6 +156,8 @@ public class FeedRecordDao extends AbstractDao<FeedRecord, Long> {
         entity.setTitle(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
         entity.setBody(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
         entity.setSearchUrl(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
+        entity.setParcelableState(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
+        entity.setImagebase64(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
      }
     
     @Override

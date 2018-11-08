@@ -9,8 +9,8 @@ interface ApiContract {
     @GET("users/like/{username}/{feedTitle}")
     fun likeFeedByUser(@Path("username")name: String, @Path("feedTitle")feedTitle:String) : Call<Unit>
 
-    @GET(value = "{searchUrl}/?getBody=true")
-    fun getFullText(@Path("searchUrl") url: String): Call<String>
+    @GET(value = "getText")
+    fun getFullText(@Query("searchUrl") url: String): Call<String>
 
     @GET("users/{username}")
     fun getFeedsSavedByUser(@Path("username") name: String): Call<List<Feed>>
@@ -49,6 +49,11 @@ interface ApiContract {
     fun getMaterial() : Call<List<Feed>>
 
     // gets Article from Third party websites
-    @GET("feeds/articles")
-    fun getArticle () : Call<List<Feed>>
+    @GET("getLatestFeeds")
+    fun getLatestFeeds (@Query("discipline") discipline : String?, @Query("interests") interests : List<String>?) : Call<List<Feed>>
+    @GET("app/version")
+    fun latestVersion():Call<Int>
+
+    @GET("interests")
+    fun getInterests(@Query("discipline") discipline : String, @Query("interests") interests : List<String>) : Call<List<Feed>>
 }

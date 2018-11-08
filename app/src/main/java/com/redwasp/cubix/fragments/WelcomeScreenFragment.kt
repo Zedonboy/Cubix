@@ -25,8 +25,8 @@ import kotlinx.android.synthetic.main.first_window.*
 import kotlinx.android.synthetic.main.login_window.*
 import kotlinx.android.synthetic.main.sign_up_window.*
 import kotlinx.android.synthetic.main.one_more_thing.*
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.runBlocking
+import kotlinx.coroutines.android.UI
+import kotlinx.coroutines.runBlocking
 
 class WelcomeScreenFragment : Fragment(), IView {
     private lateinit var loginScene : Scene
@@ -157,7 +157,7 @@ class WelcomeScreenFragment : Fragment(), IView {
             Palette.from(bitmap).generate {
                 val viewII = view.findViewById<ConstraintLayout>(R.id.interest_item_background)
                 runBlocking(UI) {
-                    viewII.setBackgroundColor(it.getVibrantColor(Color.BLUE))
+                    viewII.setBackgroundColor(it!!.getVibrantColor(Color.BLUE))
                 }
             }
         }

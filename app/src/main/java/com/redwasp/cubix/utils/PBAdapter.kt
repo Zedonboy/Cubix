@@ -1,20 +1,25 @@
 package com.redwasp.cubix.utils
 
+import android.graphics.BitmapFactory
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
+import com.google.firebase.auth.FirebaseAuth
 import com.redwasp.cubix.*
 import com.redwasp.cubix.arch.IAdapter
 import com.redwasp.cubix.arch.IDiscoverActivity
 import com.redwasp.cubix.fragments.ReadingFragment
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.async
-import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.withContext
+import kotlinx.coroutines.android.UI
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.io.InputStream
+import java.net.URL
 
 class PBAdapter<T> :
         RecyclerView.Adapter<RecyclerView.ViewHolder>(), IAdapter<T> {
@@ -69,7 +74,7 @@ class PBAdapter<T> :
         }
     }
 
-    override fun getItemCount(): Int = dataContainer.size + 1
+    override fun getItemCount(): Int = dataContainer.size
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is ViewHolder){
@@ -81,14 +86,43 @@ class PBAdapter<T> :
                 }
                 VIEW_ITEM -> {
                     val view = holder.view
-                    val feed = dataContainer[position] as Feed
+                    val feed : Feed
+                    try {
+                       feed = dataContainer[position] as Feed
+                    } catch (e : IndexOutOfBoundsException) {
+                        return
+                    }
                     val title = view.findViewById<TextView>(R.id.feed_item_title);
                     title.text = feed.title
                     val desc = view.findViewById<TextView>(R.id.feed_item_desc)
-                    desc.text = feed.body
+                    desc.text = feed.description
                     val author = view.findViewById<TextView>(R.id.feed_item_author)
                     author.text = feed.author
                     val imgBtn = view.findViewById<ImageButton>(R.id.feed_item_addToLibrary)
+                    val feedPhoto = view.findViewById<ImageView>(R.id.articlePhoto)
+
+                    if (feed.imagebase64 != null && feed.imagebase64!!.isNotBlank()) {
+                        val deferred = async { Utils.Base64Coverter.convert(feed.imagebase64!!) }
+                        launch {
+                            val bitmapImg = deferred.await()
+                            withContext(UI){
+                                feedPhoto.setImageBitmap(bitmapImg)
+                            }
+                        }
+                    } else if (feed.imageUrl != null && feed.imageUrl!!.isNotEmpty()){
+                        launch {
+                            try{
+                                val stream = URL(feed.imageUrl).content as InputStream
+                                val bitmapImg = BitmapFactory.decodeStream(stream)
+                                withContext(UI){
+                                    feedPhoto.setImageBitmap(bitmapImg)
+                                }
+                            } catch (e : Exception){
+                                return@launch
+                            }
+                        }
+                    }
+
                     if(feed.locked){
                         imgBtn.setImageResource(R.drawable.ic_lock_grey_600_24dp)
                         imgBtn.setOnClickListener { _ ->
@@ -96,8 +130,9 @@ class PBAdapter<T> :
                         }
                     } else {
                         imgBtn.setOnClickListener {
-                            val app = (discoverActivity as DiscoverActivity).application as App
-                            if(app.CurrentUser == null){
+                            // checking if the user is registered
+                            val auth = FirebaseAuth.getInstance()
+                            if(auth.currentUser == null){
                                 // not signed in
                                 discoverActivity?.userSignIn()
                                 return@setOnClickListener
@@ -109,10 +144,11 @@ class PBAdapter<T> :
                             imageBtnView.setImageResource(R.drawable.ic_more_horiz_grey_500_24dp)
                             launch {
                                 try {
-                                    val deferred = async { _network?.getFullText(feed.contentUrl) }
+                                    val deferred = async { _network?.getFullText(feed.searchUrl) }
                                     val feedRec = FeedRecord()
-                                    feedRec.searchUrl = feed.contentUrl
+                                    feedRec.searchUrl = feed.searchUrl
                                     feedRec.title = feed.title
+                                    feedRec.imagebase64 = feed.imagebase64
                                     feedRec.body = deferred.await()
                                     val record = daoSession?.feedRecordDao
                                     try {
@@ -124,13 +160,19 @@ class PBAdapter<T> :
                                     } catch (e : Exception){
                                         withContext(UI){
                                             // make a toast
+                                            // image button tryinh to reset itself
+                                            imageBtnView.setImageResource(R.drawable.ic_playlist_add_red_400_24dp)
                                             discoverActivity?.makeToast("${feed.title} could not be saved")
+                                            imageBtnView.isEnabled = true
                                         }
                                     }
                                 } catch (e : Exception){
                                     withContext(UI){
                                         // make a toast
+                                        // image button trying to reset itself.
+                                        imageBtnView.setImageResource(R.drawable.ic_playlist_add_red_400_24dp)
                                         discoverActivity?.makeToast("Could not download ${feed.title}, retry")
+                                        imageBtnView.isEnabled = true
                                     }
                                 }
                             }
@@ -138,21 +180,26 @@ class PBAdapter<T> :
                     }
 
                     val imgBtn1 = view.findViewById<ImageButton>(R.id.feed_item_like)
+                    imgBtn1.tag = 0
                     imgBtn1.setOnClickListener {
                         // register the hash as liked shits
                         val imageBtn = it as ImageButton
-                        imageBtn.tag = R.drawable.ic_favorite_red_400_24dp
-                        if (imageBtn.tag == R.drawable.ic_favorite_red_400_24dp){
-                            imageBtn.setImageResource(R.drawable.ic_favorite_border_red_400_24dp)
-                        } else {
+                        if (imageBtn.tag == 0){
+                            imageBtn.tag = 1
                             imageBtn.setImageResource(R.drawable.ic_favorite_red_400_24dp)
+                        } else {
+                            imageBtn.tag = 0
+                            imageBtn.setImageResource(R.drawable.ic_favorite_border_red_400_24dp)
                         }
                     }
 
                     val container = view.findViewById<View>(R.id.feed_list_body)
                     container.setOnClickListener { _ ->
                         // call the readingListView
-                        val fragment = ReadingFragment.newInstance(feed.title, feed.contentUrl, null)
+                        val fragment = ReadingFragment().apply {
+                            searchURL = feed.searchUrl
+                            this.title = feed.title
+                        }
                         discoverActivity?.navigateToAnotherView(fragment)
                     }
                 }

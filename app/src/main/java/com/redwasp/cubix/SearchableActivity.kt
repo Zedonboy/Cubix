@@ -11,10 +11,10 @@ import android.view.View
 import com.redwasp.cubix.utils.Feed
 import com.redwasp.cubix.utils.Network
 import com.redwasp.cubix.utils.PBAdapter
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.async
-import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.withContext
+import kotlinx.coroutines.android.UI
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class SearchableActivity : AppCompatActivity() {
     private lateinit var network: Network
@@ -59,7 +59,7 @@ class SearchableActivity : AppCompatActivity() {
                 withContext(UI){
                     (this@SearchableActivity.recyclerView.adapter as PBAdapter<Feed>).addData(list)
                     showlists()
-                    this@SearchableActivity.recyclerView.adapter.notifyDataSetChanged()
+                    (this@SearchableActivity.recyclerView.adapter as PBAdapter<Feed>).notifyDataSetChanged()
                 }
             } catch (e : Exception) {
                 withContext(UI){

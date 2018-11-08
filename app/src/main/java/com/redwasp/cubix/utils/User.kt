@@ -1,4 +1,4 @@
 package com.redwasp.cubix.utils
 
-data class User(val username : String){
+data class User(val email: String, val tags: List<String> = emptyList()){
 }

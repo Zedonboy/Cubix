@@ -1,4 +1,8 @@
 package com.redwasp.cubix.utils
 
-data class Feed(val title : String, val contentUrl : String , val imageUrl : String? = null, var body: String? = null, val author : String,
-                val locked : Boolean = false)
+data class Feed(
+        var title : String,
+        var searchUrl : String, var imageUrl : String? = null, var description : String, var author : String,
+                var locked : Boolean = false, var imagebase64 : String? = null){
+    constructor() : this("","",null,"","")
+}

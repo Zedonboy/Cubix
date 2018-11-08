@@ -1,26 +1,29 @@
 package com.redwasp.cubix
 
 import android.graphics.BitmapFactory
-import android.media.ThumbnailUtils
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.redwasp.cubix.customViews.Markers
 import kotlinx.android.synthetic.main.fragment_image_upload.*
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.withContext
+import kotlinx.coroutines.android.UI
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class ImageUploadFragment : Fragment() {
-    private var imagePath = ""
-    var fullImagePath = ""
-    set(value) {imagePath = value}
+    private var _imagePath = ""
+    var uploadImagePath : String = ""
+    set(value) {
+        _imagePath = value
+    }
     var noteName = ""
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
+        (activity as DiscoverActivity).setUpToolBAr()
         return inflater.inflate(R.layout.fragment_image_upload, container, false)
     }
 
@@ -29,23 +32,23 @@ class ImageUploadFragment : Fragment() {
     }
 
     private fun initUI(){
-        if (fullImagePath.isEmpty()) return
+        if (_imagePath.isEmpty()) return
         launch {
-            val thumbImage = BitmapFactory.decodeFile(fullImagePath)
-            val thumbnail = ThumbnailUtils.extractThumbnail(thumbImage, 100, 100)
+            val option = BitmapFactory.Options().apply {
+                inSampleSize = 4
+            }
+            val noteImg = BitmapFactory.decodeFile(_imagePath, option)
             withContext(UI){
-                image_upload_thumbnail?.setImageBitmap(thumbnail)
+                image_upload_preview.setImageBitmap(noteImg)
             }
         }
         image_upload_btn?.setOnClickListener {
-            _ ->
-            noteName = image_upload_edit_Text?.text?.toString() ?: "note_1"
-            // get the file absolute path
-        }
-    }
 
-    fun showProgressBar(){
-        // first disable the button
-        // show progressBar
+        }
+
+        image_upload_preview_layout?.addView(Markers(context!!).apply {
+            x = 100f
+            y = 50f
+        })
     }
 }

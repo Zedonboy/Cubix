@@ -4,17 +4,18 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.TextView
 import com.redwasp.cubix.DaoSession
 import com.redwasp.cubix.FeedRecord
 import com.redwasp.cubix.R
 import com.redwasp.cubix.arch.IAdapter
 import com.redwasp.cubix.arch.IDiscoverActivity
-import com.redwasp.cubix.arch.IMaterialRackFragment
 import com.redwasp.cubix.fragments.ReadingFragment
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.withContext
+import kotlinx.coroutines.android.UI
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class RackAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(), IAdapter<FeedRecord> {
     private val dataContainer = mutableListOf<FeedRecord>()
@@ -50,7 +51,7 @@ class RackAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(), IAdapter<Fe
                         withContext(UI){
                             notifyDataSetChanged()
                             controller?.makeToast("${feedrecord.title} is deleted")
-
+                            return@withContext
                         }
                     } catch (e : Exception){
                         withContext(UI){
@@ -59,6 +60,16 @@ class RackAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(), IAdapter<Fe
                     }
                 }
             }
+            val img = view.findViewById<ImageView>(R.id.material_book_photo)
+
+            val deferred = async { Utils.Base64Coverter.convert(feedrecord.imagebase64) }
+            launch {
+                val bitmapImg = deferred.await()
+                withContext(UI){
+                    img.setImageBitmap(bitmapImg)
+                }
+            }
+
             with(title){
                 text = feedrecord.title
                 setOnClickListener { callReaderFrag(position) }
@@ -72,7 +83,11 @@ class RackAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(), IAdapter<Fe
 
     private fun callReaderFrag(position: Int){
         val record = dataContainer[position]
-        val frag = ReadingFragment.newInstance(record.title, null, record.body)
+        val frag = ReadingFragment().apply {
+            title = record.title
+            content = record.body
+            parcelableString = record.parcelableState
+        }
         controller?.navigateToAnotherView(frag)
     }
     override fun addData(data: Collection<FeedRecord>) {

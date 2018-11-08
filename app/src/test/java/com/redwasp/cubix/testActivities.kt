@@ -68,7 +68,6 @@ class testActivities {
         currentFrag = discoverAct.supportFragmentManager.findFragmentByTag("MaterialRackFragment")
         assertTrue("Material Fragment does not show up", (currentFrag != null && currentFrag.isVisible && currentFrag is MaterialRackFragment))
 
-       discoverAct.callCamFunc()
     }
 
 }

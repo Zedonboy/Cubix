@@ -3,12 +3,9 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="transparentBlue">#140099ff</color>
     <color name="tinted">#28000000</color>
-    <color name="colorPrimary1">#5DB7DE</color>
     <color name="colorPrimaryDark2">#60992d</color>
     <color name="colorAccent2">#f3eff5</color>
-    <color name="feeds_background">#f1f1f1</color>
     <color name="text_body_color">#616161</color>
     <color name="grey">#616161</color>
     <color name="red">#f44336</color>

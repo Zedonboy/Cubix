@@ -2,7 +2,14 @@
     <string name="app_name">Cubix</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="facebook_application_id" translatable="false">1013657715478667</string>
+    <!-- Facebook Application ID, prefixed by 'fb'. Enables Chrome Custom tabs. -->
+    <string name="sharedPrefFile">settings</string>
+    <string name="user_preferences">user_preferences</string>
+    <string name="user_discipline">user_discipline</string>
+    <string name="latestVerrsionCheckKey">latestVersion</string>
+    <string name="downloadUrl"></string>
+    <string name="facebook_login_protocol_scheme" translatable="false">fb1013657715478667</string>
     <string name="login">login</string>
     <string name="signup">Sign up</string>
     <string name="pull_up">Pull Up For Feeds</string>
@@ -12,24 +19,16 @@
     <string name="password">Password</string>
     <string name="sign_up_with_facebook">Continue with facebook</string>
     <string name="Or">Or</string>
-    <string name="pin">Pin</string>
-    <string name="like">Like</string>
     <string name="settings">settings</string>
     <string name="search">Search</string>
     <string name="menu">Menu</string>
     <string name="app_logo">app_logo</string>
     <string name="home">Home</string>
     <string name="account">Profile</string>
-    <string name="library">Library</string>
     <string name="todo">TODO</string>
-    <string name="apiUrl">http://api.beeReader.com</string>
-    <string name="readerActivity_Intent_TitleKey">title</string>
-    <string name="readerActivity_Intent_BodyKey">body</string>
-    <string name="readerActivity_Intent_ImageUriKey">imageUri</string>
+    <string name="cubixFirebase_Url">https://us-central1-cubix-3bb9d.cloudfunctions.net</string>
     <string name="next">Next</string>
-    <string name="userKey">userState</string>
     <string name="discover">Discover</string>
-    <string name="shared_pref_key">com.redwasp.cubix.SHARED_PREF</string>
     <string name="search_hint">Type The Material You are Looking for</string>
     <string name="take_note">Snap Note</string>
     <string name="notify_handwriting">Hi, make sure the note have a good handwriting for best performance</string>
@@ -45,4 +44,5 @@
     <string name="note">Note</string>
     <string name="profile">Profile</string>
     <string name="emptyRack">Your Library is empty</string>
+    <string name="based_on_your_interest">Based On Your Interests</string>
 </resources>

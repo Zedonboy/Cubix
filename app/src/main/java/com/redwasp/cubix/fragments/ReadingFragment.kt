@@ -1,26 +1,20 @@
 package com.redwasp.cubix.fragments
 
 import android.os.Bundle
+import android.os.Parcelable
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.google.gson.Gson
 import com.redwasp.cubix.App
 import com.redwasp.cubix.R
 import com.redwasp.cubix.utils.Network
 import kotlinx.android.synthetic.main.fragment_reading.*
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.async
-import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.withContext
-
-
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-private const val ARG_PARAM3 = "param2"
-
+import kotlinx.coroutines.android.UI
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 /**
  * A simple [Fragment] subclass.
  * Use the [ReadingFragment.newInstance] factory method to
@@ -29,19 +23,12 @@ private const val ARG_PARAM3 = "param2"
  */
 class ReadingFragment : Fragment() {
     // TODO: Rename and change types of parameters
-    private var title: String? = null
-    private var searchURL: String? = null
-    private var content : String? = null
+    var title: String? = null
+    var searchURL: String? = null
+    var content : String? = null
+    var parcelableString : String? = null
     private lateinit var network: Network
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            title = it.getString(ARG_PARAM1)
-            searchURL = it.getString(ARG_PARAM2)
-            content = it.getString(ARG_PARAM3)
-        }
-    }
+    private lateinit var state : Parcelable
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -62,10 +49,17 @@ class ReadingFragment : Fragment() {
             reading_fragment_progressbar?.visibility = View.VISIBLE
             getFullContent()
         }
+        showFullContent()
+        if(parcelableString != null){
+            val gson = Gson()
+            state = gson.fromJson(parcelableString, Parcelable::class.java)
+            fragment_reading_nestedScrollview?.state = state
+        }
     }
 
     private fun getFullContent(){
-        val deferred = async { network.getFullText(searchURL?:"") }
+        if (searchURL == null) return
+        val deferred = async { network.getFullText(searchURL!!) }
         launch {
             try {
                 content = deferred.await()
@@ -91,17 +85,5 @@ class ReadingFragment : Fragment() {
         reading_fragment_body?.visibility = View.GONE
         reading_fragment_progressbar?.visibility = View.GONE
         reading_fragment_errorVIew?.visibility = View.VISIBLE
-    }
-
-    companion object {
-        @JvmStatic
-        fun newInstance(title: String?, searchURL: String?, content: String?) =
-                ReadingFragment().apply {
-                    arguments = Bundle().apply {
-                        putString(ARG_PARAM1, title)
-                        putString(ARG_PARAM2, searchURL)
-                        putString(ARG_PARAM3, content)
-                    }
-                }
     }
 }

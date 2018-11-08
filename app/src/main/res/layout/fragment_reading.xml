@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<com.redwasp.cubix.customViews.CubixNestedView
+        android:id="@+id/fragment_reading_nestedScrollview"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -24,14 +24,14 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/reading_fragment_imageView"
-            android:layout_width="0dp"
-            android:layout_height="200dp"
-            android:src="@drawable/placeholder"
-            android:scaleType="fitXY"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/reading_fragment_toolbar" />
+                android:id="@+id/reading_fragment_imageView"
+                android:layout_width="0dp"
+                android:layout_height="200dp"
+                app:srcCompat="@drawable/placeholder"
+                android:scaleType="fitXY"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/reading_fragment_toolbar" />
 
         <TextView
             android:id="@+id/reading_fragment_title"
@@ -130,4 +130,4 @@
             app:layout_constraintTop_toBottomOf="@+id/reading_fragment_title" />
 
     </android.support.constraint.ConstraintLayout>
-</ScrollView>
+</com.redwasp.cubix.customViews.CubixNestedView>

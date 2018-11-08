@@ -7,10 +7,7 @@
     </style>
     <style name="ActionBtn">
         <item name="android:textColor">@android:color/white</item>
-        <item name="android:background">@drawable/clicked_action_btn</item>
-    </style>
-    <style name="actionbarStyles">
-        <item name="android:tint">#424242</item>
+        <item name="background">@drawable/clicked_action_btn</item>
     </style>
 
 </resources>
